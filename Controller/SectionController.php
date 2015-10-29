@@ -46,11 +46,13 @@ class SectionController extends Controller
     {
         $sectionList = $this->sectionService->loadSections();
         $contentCountBySectionId = [];
+        $policyLimitationCountBySectionId = [];
         $deleteFormsBySectionId = [];
 
         foreach ($sectionList as $section) {
             $sectionId = $section->id;
             $contentCountBySectionId[$sectionId] = $this->sectionService->countAssignedContents($section);
+            $policyLimitationCountBySectionId[$sectionId] = $this->sectionService->countPoliciesUsing($section);
             $deleteFormsBySectionId[$sectionId] = $this->createForm(
                 new SectionDeleteType($this->sectionService),
                 ['sectionId' => $sectionId]
@@ -62,6 +64,7 @@ class SectionController extends Controller
             'canAssign' => $this->isGranted(new Attribute('section', 'assign')),
             'sectionList' => $sectionList,
             'contentCountBySection' => $contentCountBySectionId,
+            'policyLimitationCountBySection' => $policyLimitationCountBySectionId,
             'deleteFormsBySectionId' => $deleteFormsBySectionId,
         ]);
     }
@@ -82,6 +85,7 @@ class SectionController extends Controller
             'section' => $section,
             'deleteForm' => $deleteForm->createView(),
             'contentCount' => $this->sectionService->countAssignedContents($section),
+            'policyLimitationCount' => $this->sectionService->countPoliciesUsing($section),
             'canEdit' => $this->isGranted(new Attribute('section', 'edit')),
             'canAssign' => $this->isGranted(new Attribute('section', 'assign')),
         ]);

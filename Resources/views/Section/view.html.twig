@@ -59,7 +59,7 @@
                         form_widget(
                             deleteForm.delete,
                             {
-                                "disabled": not canEdit,
+                                "disabled": contentCount or policyLimitationCount,
                                 "attr": {"class": "pure-button ez-button ez-remove-section-button ez-font-icon ez-button-delete"}
                             }
                         )
